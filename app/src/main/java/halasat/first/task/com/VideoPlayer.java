@@ -20,6 +20,7 @@ import com.google.android.exoplayer2.text.CaptionStyleCompat;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.ui.DefaultTimeBar;
 import com.google.android.exoplayer2.ui.PlaybackControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.SubtitleView;
@@ -49,6 +50,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -63,14 +65,17 @@ public class VideoPlayer extends AppCompatActivity {
     private Uri videoUri;
     private ImageView mFullScreenIcon;
     private Toolbar mToolbar;
-    private MediaRouteButton mediaRouteButton;
     private CastContext castContext;
     private String mediaInfoTitle;
+    private String imageUrl;
     private ImageView orientation, bottomSheet;
     private LinearLayout bottomSheetLayout;
     private BottomSheetBehavior bottomSheetBehavior;
-    private TextView changeQuailty, changeFontSize, textSize;
+    private TextView changeQuailty, changeFontSize, textSize,exo_duration,exo_position,titleText;
     private OrientationEventListener orientationEventListener;
+    private ImageButton forewordButton, backwardButton;
+    private DefaultTimeBar timeBar;
+    private MediaRouteButton mediaRouteButton;
 
 
     @Override
@@ -197,6 +202,10 @@ public class VideoPlayer extends AppCompatActivity {
 
             }
         });
+        boolean showTV=getIntent().getBooleanExtra("showTV",false);
+        if(showTV){
+            hideController();
+        }
     }
 
     private void setOrientationSensor() {
@@ -459,7 +468,7 @@ public class VideoPlayer extends AppCompatActivity {
     private void findView() {
         mToolbar = findViewById(R.id.app_bar);
         simpleExoPlayerView = findViewById(R.id.exoplayer);
-        mediaRouteButton = findViewById(R.id.media_route_button);
+
         PlaybackControlView controlView = simpleExoPlayerView.findViewById(R.id.exo_controller);
         mFullScreenIcon = controlView.findViewById(R.id.exo_fullscreen_icon);
         orientation = mToolbar.findViewById(R.id.orientation);
@@ -468,6 +477,13 @@ public class VideoPlayer extends AppCompatActivity {
         changeFontSize = findViewById(R.id.change_font_size);
         changeQuailty = findViewById(R.id.change_quality);
         textSize = findViewById(R.id.text_size);
+        forewordButton=controlView.findViewById(R.id.exo_ffwd);
+        backwardButton=controlView.findViewById(R.id.exo_rew);
+        timeBar=controlView.findViewById(R.id.exo_progress);
+        exo_duration=controlView.findViewById(R.id.exo_duration);
+        exo_position=controlView.findViewById(R.id.exo_position);
+        mediaRouteButton =  mToolbar.findViewById(R.id.media_route_button);
+        titleText=mToolbar.findViewById(R.id.title_text);
 
     }
 
@@ -541,6 +557,23 @@ public class VideoPlayer extends AppCompatActivity {
         simpleExoPlayerView.getSubtitleView().setStyle(style);
 
         simpleExoPlayerView.getSubtitleView().setFractionalTextSize(SubtitleView.DEFAULT_TEXT_SIZE_FRACTION * fontSize);
+    }
+    // Hide controller button for TV use
+    public void hideController(){
+        forewordButton.setImageDrawable(null);
+        backwardButton.setImageDrawable(null);
+        backwardButton.setEnabled(false);
+        forewordButton.setEnabled(false);
+        exo_position.setVisibility(View.GONE);
+        exo_duration.setVisibility(View.GONE);
+        timeBar.setEnabled(false);
+        timeBar.setAdMarkerColor(Color.BLACK);
+        timeBar.setBufferedColor(Color.BLACK);
+        timeBar.setPlayedColor(Color.BLACK);
+        timeBar.setPlayedAdMarkerColor(Color.BLACK);
+        timeBar.setScrubberColor(Color.BLACK);
+        timeBar.setUnplayedColor(Color.BLACK);
+
     }
 
 }
