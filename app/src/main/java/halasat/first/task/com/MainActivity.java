@@ -20,7 +20,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, VideoPlayer.class);
                 intent.putExtra("title", "Test");
-                intent.putExtra("videoUrl", "http://halasat2.vodu.me:80/vod/playlist_2_77636562545130.json/master.m3u8");
+                intent.putExtra("videoUrl", "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8");
+                intent.putExtra("imageUrl","https://github.com/mkaflowski/HybridMediaPlayer/blob/master/images/cover.jpg?raw=true");
+                intent.putExtra("showTV",false);
                 startActivity(intent);
             }
         });
